@@ -1,0 +1,533 @@
+basePath: /
+definitions:
+  effectiveMobile_pkg_domain_people.Info:
+    properties:
+      address:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      patronymic:
+        type: string
+      surname:
+        type: string
+    type: object
+  effectiveMobile_pkg_domain_people.People:
+    properties:
+      address:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      passportNumber:
+        type: string
+      password:
+        type: string
+      patronymic:
+        type: string
+      surname:
+        type: string
+      tasksIds:
+        items:
+          type: integer
+        type: array
+    type: object
+  effectiveMobile_pkg_domain_people.Registration:
+    properties:
+      passportNumber:
+        type: string
+      password:
+        type: string
+    required:
+    - passportNumber
+    - password
+    type: object
+  effectiveMobile_pkg_domain_people.Request:
+    properties:
+      address:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      passportNumber:
+        type: string
+      patronymic:
+        type: string
+      surname:
+        type: string
+      tasks:
+        items:
+          $ref: '#/definitions/effectiveMobile_pkg_domain_task.Task'
+        type: array
+    type: object
+  effectiveMobile_pkg_domain_task.Task:
+    properties:
+      description:
+        type: string
+      endTime:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      startTime:
+        type: string
+      totalTime:
+        $ref: '#/definitions/time.Duration'
+    required:
+    - name
+    - startTime
+    type: object
+  time.Duration:
+    enum:
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    type: integer
+    x-enum-varnames:
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+host: 127.0.0.1:8001
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+  description: This is a sample server People server.
+  title: People API
+  version: "1.0"
+paths:
+  /info:
+    get:
+      description: Get info about a person by passport series and number
+      parameters:
+      - description: Passport Series
+        in: query
+        name: passportSerie
+        required: true
+        type: string
+      - description: Passport Number
+        in: query
+        name: passportNumber
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/effectiveMobile_pkg_domain_people.Request'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get info about a person
+      tags:
+      - People
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login with email and password
+      parameters:
+      - description: User login info
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/effectiveMobile_pkg_domain_people.Registration'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login a user
+      tags:
+      - User
+  /people:
+    delete:
+      description: Delete person information
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a person
+      tags:
+      - People
+    get:
+      description: Get list of people with optional filters and pagination
+      parameters:
+      - in: query
+        name: address
+        type: string
+      - in: query
+        name: id
+        type: integer
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: passportNumber
+        type: string
+      - in: query
+        name: patronymic
+        type: string
+      - in: query
+        name: surname
+        type: string
+      - collectionFormat: csv
+        in: query
+        items:
+          type: integer
+        name: tasksIds
+        type: array
+      - in: query
+        minimum: 1
+        name: limit
+        type: integer
+      - in: query
+        minimum: 1
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/effectiveMobile_pkg_domain_people.People'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get list of people
+      tags:
+      - People
+    put:
+      consumes:
+      - application/json
+      description: Update person information
+      parameters:
+      - description: Update person info
+        in: body
+        name: people
+        required: true
+        schema:
+          $ref: '#/definitions/effectiveMobile_pkg_domain_people.Info'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/effectiveMobile_pkg_domain_people.Info'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a person
+      tags:
+      - People
+  /people/task/:
+    get:
+      description: Get tasks for a person within a time range
+      parameters:
+      - description: Start Time
+        in: query
+        name: startTime
+        required: true
+        type: string
+      - description: End Time
+        in: query
+        name: endTime
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/effectiveMobile_pkg_domain_task.Task'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get tasks for a person
+      tags:
+      - Tasks
+  /people/task/{taskId}:
+    delete:
+      description: Delete a task for a person
+      parameters:
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a task for a person
+      tags:
+      - Tasks
+  /people/task/finish/{taskId}:
+    post:
+      description: Finish a task for a person
+      parameters:
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Finish a task for a person
+      tags:
+      - Tasks
+  /people/task/start:
+    post:
+      consumes:
+      - application/json
+      description: Start a task for a person
+      parameters:
+      - description: Task info
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/effectiveMobile_pkg_domain_task.Task'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Start a task for a person
+      tags:
+      - Tasks
+  /registration:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with email and password
+      parameters:
+      - description: User registration info
+        in: body
+        name: registration
+        required: true
+        schema:
+          $ref: '#/definitions/effectiveMobile_pkg_domain_people.Registration'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Email already exist
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Register a new user
+      tags:
+      - User
+  /tasks:
+    get:
+      description: Get list of all tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/effectiveMobile_pkg_domain_task.Task'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get list of tasks
+      tags:
+      - Tasks
+swagger: "2.0"
