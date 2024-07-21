@@ -7,16 +7,16 @@ volumes:
   local_postgres_data:
 
 services:
-#  server:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8001:8001"
-#    networks:
-#      - proxynet
-#    depends_on:
-#      - postgresdb
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    networks:
+      - proxynet
+    depends_on:
+      - postgresdb
 
   postgresdb:
     image: postgres

@@ -44,5 +44,5 @@ func NewServerHTTP(userHandler *handler.Handler) *ServerHTTP {
 }
 
 func (sh *ServerHTTP) Start() {
-	sh.engine.Run("127.0.0.1:8001")
+	sh.engine.Run("0.0.0.0:8001")
 }

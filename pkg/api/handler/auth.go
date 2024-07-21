@@ -55,7 +55,7 @@ func (h *Handler) Registration(c *gin.Context) {
 	if err != nil {
 		switch err.Error() {
 		case db.ErrDuplicate.Error():
-			c.JSON(409, "Email already exist")
+			c.JSON(409, "passportNumber already exist")
 			log.Error("Register email failed %v", err.Error())
 			break
 		default:

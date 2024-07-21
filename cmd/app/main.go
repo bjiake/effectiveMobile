@@ -11,7 +11,7 @@ import (
 // @description This is a sample server People server.
 // @contact.name API Support
 // @contact.email support@example.com
-// @host 127.0.0.1:8001
+// @host 0.0.0.0:8001
 // @BasePath /
 func main() {
 	cfg, configErr := config.LoadConfig()
